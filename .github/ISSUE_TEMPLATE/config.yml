@@ -1,0 +1,15 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Discuss on FHIR Zulip
+    url: https://chat.fhir.org/
+    about: >-
+      Questions about how a patient summary should be represented are best
+      discussed on the FHIR Zulip chat.
+  - name: Comment on the EPS specification
+    url: http://jira.hl7.org
+    about: >-
+      When the problem is in the specification rather than in an example, give
+      ballot feedback; the EPS ballot IG links "Propose a change" to HL7 Jira.
+  - name: Contribute an example yourself
+    url: https://github.com/Gefyra/fhir-eps-examples/blob/main/CONTRIBUTING.md
+    about: A pull request needs two metadata fields and one FHIR file.

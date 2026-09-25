@@ -1,0 +1,99 @@
+{% extends "base.html.j2" %}
+{% block content %}
+<h1>FHIR EPS examples</h1>
+
+<p class="lede">
+  Real-world patient summaries measured against the
+  <a href="{{ eps_url }}">HL7 Europe Patient Summary{% if model.version %} {{ model.version }}{% endif %}</a>,
+  validated automatically so that you can see how implementations fare, how
+  they fill each section, and which EPS profiles have no example yet.
+</p>
+{% if run.terminologyFallback %}
+<div class="warning-box">
+  <strong>Terminology checks were skipped in this run.</strong> The terminology
+  server was unreachable, so the validator ran without terminology services:
+  no LOINC, SNOMED CT or UCUM codes were checked and fewer findings than usual
+  are shown. The next scheduled run with a reachable server replaces this one.
+</div>
+{% endif %}
+
+<ul class="totals">
+  {% for status in statuses %}
+  <li class="total total-{{ status }}">
+    <span class="count">{{ totals[status] }}</span>
+    <span class="label">{{ status | status_icon }} {{ status | status_label }}</span>
+  </li>
+  {% endfor %}
+  <li class="total">
+    <span class="count">{{ coverage.sectionsCovered }} / {{ coverage.sections }}</span>
+    <span class="label"><a href="{{ base }}sections/index.html">EPS sections with an example</a></span>
+  </li>
+  <li class="total">
+    <span class="count">{{ coverage.profilesCovered }} / {{ coverage.profiles }}</span>
+    <span class="label"><a href="{{ base }}profiles/index.html">EPS profiles declared</a></span>
+  </li>
+</ul>
+
+<p class="filter-row">
+  <label for="filter">Filter</label>
+  <input id="filter" type="search" data-filter-target=".submission-table"
+         placeholder="submission, contributor, country…" autocomplete="off">
+</p>
+
+{% for status in statuses %}
+{% set group = run.submissions | selectattr("status", "equalto", status) | list %}
+{% if group %}
+<section class="status-group" id="status-{{ status }}">
+  <h2>{{ status | status_icon }} {{ status | status_label }} <span class="muted">({{ group | length }})</span></h2>
+  {% if status == "not-validated" %}
+  <p class="muted">
+    The validator could not produce a result for these files. That is an
+    infrastructure problem, not a statement about the examples.
+  </p>
+  {% endif %}
+  <table class="submission-table">
+    <thead>
+      <tr>
+        <th>Submission</th><th>Contributor</th><th>Country</th><th>FHIR</th>
+        <th>Rating</th><th class="num">E</th><th class="num">W</th>
+        <th class="num">I</th><th class="num">Suppressed</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for submission in group %}
+      <tr data-search="{{ submission.id }} {{ submission.title }} {{ submission.custodian.name }} {{ submission.country or '' }} {{ submission.source.values() | join(' ') }}">
+        <td>
+          <a href="{{ base }}submissions/{{ submission.contributor }}/{{ submission.slug }}/index.html">{{ submission.title }}</a>
+          <br><code class="muted">{{ submission.id }}</code>
+        </td>
+        <td>{{ submission.custodian.name or submission.contributor }}</td>
+        <td>{{ submission.country or "–" }}</td>
+        <td>{{ submission.fhirVersion }}</td>
+        <td title="{{ submission.starReasons | join(' · ') }}">{{ submission.stars | stars }}</td>
+        <td class="num">{{ submission.counts.errors }}</td>
+        <td class="num">{{ submission.counts.warnings }}</td>
+        <td class="num">{{ submission.counts.information }}</td>
+        <td class="num">{{ submission.counts.suppressed }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endif %}
+{% endfor %}
+
+{% if not run.submissions %}
+<p>No submissions yet. <a href="{{ repo_url }}/blob/main/CONTRIBUTING.md">Add the first one.</a></p>
+{% endif %}
+
+<section class="rating-key">
+  <h2>What the rating means</h2>
+  <p>A submission shows the highest level it has reached; the levels are not cumulative requirements.</p>
+  <ul>
+    <li><strong>★</strong> Real-world example — it came out of a running system.</li>
+    <li><strong>★★</strong> Reviewed by a subject matter expert.</li>
+    <li><strong>★★★</strong> Validated against a profile — every file declares one or is a document Bundle checked against the enforced EPS Bundle profile; computed by CI, no unsuppressed errors.</li>
+    <li><strong>★★★★</strong> Consensus example — the community agreed this is how it should be done.</li>
+  </ul>
+</section>
+{% endblock %}

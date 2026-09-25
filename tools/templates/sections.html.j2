@@ -1,0 +1,81 @@
+{% extends "base.html.j2" %}
+{% block title %}Sections · {{ site_title }}{% endblock %}
+{% block content %}
+<h1>Sections</h1>
+<p class="lede">
+  Every <code>Composition.section</code> across the collection, keyed by its
+  code. The EPS sections come first, in the order of the EPS Composition
+  profile, including the ones nobody has sent yet. Follow a section to see how
+  each implementation fills it.
+</p>
+
+<p class="filter-row">
+  <label for="filter">Filter</label>
+  <input id="filter" type="search" data-filter-target=".section-table"
+         placeholder="section, code…" autocomplete="off">
+</p>
+
+{% set eps_sections = run.sections | selectattr("eps") | list %}
+{% set other_sections = run.sections | rejectattr("eps") | list %}
+
+<h2>EPS sections <span class="muted">({{ eps_sections | length }})</span></h2>
+<table class="section-table">
+  <thead>
+    <tr>
+      <th>Section</th><th>Code</th><th>EPS</th><th class="num">Submissions</th>
+      <th class="num">With entries</th><th class="num">emptyReason</th><th class="num">Narrative only</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for entry in eps_sections %}
+    <tr data-search="{{ entry.name }} {{ entry.code }} {{ entry.eps.sliceName }}">
+      <td><a href="{{ entry.slug }}.html">{{ entry.name }}</a></td>
+      <td><code>{{ entry.code }}</code> <span class="muted small">{{ entry.systemLabel }}</span></td>
+      <td>{{ entry.eps.cardinality }} <span class="muted small">{{ entry.requirement }}</span></td>
+      {% if entry.occurrenceCount %}
+      <td class="num">{{ entry.submissionCount }}</td>
+      <td class="num">{{ entry.withEntries }}</td>
+      <td class="num">{{ entry.withEmptyReason }}</td>
+      <td class="num">{{ entry.narrativeOnly }}</td>
+      {% else %}
+      <td colspan="4" class="muted">no example yet</td>
+      {% endif %}
+    </tr>
+    {% else %}
+    <tr><td colspan="7" class="muted">The EPS model is missing; run <code>python -m tools ig-model</code>.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h2>Other sections <span class="muted">({{ other_sections | length }})</span></h2>
+<p class="muted">Sections found in submissions whose code EPS does not define.</p>
+<table class="section-table">
+  <thead>
+    <tr>
+      <th>Section</th><th>Code</th><th>EPS</th><th class="num">Submissions</th>
+      <th class="num">With entries</th><th class="num">emptyReason</th><th class="num">Narrative only</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for entry in other_sections %}
+    <tr data-search="{{ entry.name }} {{ entry.code }}">
+      <td><a href="{{ entry.slug }}.html">{{ entry.name }}</a></td>
+      <td><code>{{ entry.code or "–" }}</code> <span class="muted small">{{ entry.systemLabel }}</span></td>
+      <td class="muted">{{ entry.requirement }}</td>
+      <td class="num">{{ entry.submissionCount }}</td>
+      <td class="num">{{ entry.withEntries }}</td>
+      <td class="num">{{ entry.withEmptyReason }}</td>
+      <td class="num">{{ entry.narrativeOnly }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="7" class="muted">None: every section in the collection is an EPS section.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<p class="muted small">
+  The counts are occurrences: a submission with two documents counts twice.
+  "Narrative only" means a section with a narrative but neither entries nor an
+  <code>emptyReason</code>.
+</p>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends "base.html.j2" %}
+{% block title %}{{ section.name }} · Sections{% endblock %}
+{% block content %}
+<nav class="crumbs">
+  <a href="{{ base }}index.html">Collection</a> /
+  <a href="{{ base }}sections/index.html">Sections</a> /
+  <code>{{ section.code or "no code" }}</code>
+</nav>
+
+<h1>{{ section.name }}</h1>
+<p class="lede">
+  <code>{{ section.system or "(no system)" }}</code> · <code>{{ section.code or "–" }}</code>
+  — {{ section.occurrenceCount }} occurrence(s) in {{ section.submissionCount }} submission(s).
+</p>
+
+{% if section.eps %}
+<section class="card">
+  <h2>What EPS expects</h2>
+  <dl>
+    <dt>Slice</dt><dd><code>Composition.section:{{ section.eps.sliceName }}</code></dd>
+    <dt>Cardinality</dt><dd>{{ section.eps.cardinality }} — {{ section.requirement }}</dd>
+    <dt>Entry types</dt>
+    <dd>
+      {% if section.eps.anyResource %}any resource
+      {% else %}{% for type in section.eps.expectedTypes %}<code class="small">{{ type }}</code>{% if not loop.last %}, {% endif %}{% else %}<span class="muted">none named</span>{% endfor %}{% endif %}
+    </dd>
+    <dt>Entry profiles</dt>
+    <dd>
+      {% for slice in section.eps.entrySlices %}
+      <code class="small">entry:{{ slice.sliceName }}</code> ({{ slice.min }}..{{ slice.max }}) →
+      {% for profile in slice.profiles %}
+      {% set page = profile_slugs.get(profile.split('|')[0]) %}
+      {% if page %}<a href="{{ base }}profiles/{{ page }}.html"><code class="small">{{ profile | profile_label }}</code></a>{% else %}<code class="small">{{ profile }}</code>{% endif %}{% if not loop.last %}, {% endif %}
+      {% endfor %}<br>
+      {% else %}<span class="muted">no entry slices</span>{% endfor %}
+    </dd>
+  </dl>
+  <p class="muted small">
+    From <code>{{ model.composition }}</code> ({{ model.package }}#{{ model.version }}).
+    Entry types and profiles outside this list are highlighted below; EPS slices
+    are open, so they are not necessarily errors.
+  </p>
+</section>
+{% else %}
+<p class="warning-box">
+  EPS does not define a section with this code. It is listed because at least
+  one submission sends it.
+</p>
+{% endif %}
+
+<h2>Occurrences</h2>
+{% if section.occurrences %}
+<p>
+  Each row is one section as it was sent. Reading down a column shows where
+  implementations agree and where they do not.
+</p>
+<div class="scroll-x">
+<table class="comparison">
+  <thead>
+    <tr>
+      <th>Submission</th><th>Title as sent</th><th class="num">Entries</th><th>Entry types</th>
+      <th>Entry profiles</th><th>Unresolved references</th><th>emptyReason</th><th>Narrative</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for occurrence in section.occurrences %}
+    <tr>
+      <td>
+        <a href="{{ base }}submissions/{{ occurrence.submission }}/index.html">{{ occurrence.title }}</a>
+        {% if occurrence.country %}<span class="muted small">{{ occurrence.country }}</span>{% endif %}
+        <br><a class="small" href="{{ base }}submissions/{{ occurrence.submission }}/{{ occurrence.file }}.html"><code class="muted">{{ occurrence.file }}</code></a>
+        {% if occurrence.depth %}<br><span class="tag">nested</span> <code class="small">{{ occurrence.path }}</code>{% endif %}
+      </td>
+      <td>
+        {{ occurrence.sectionTitle or "–" }}
+        {% if occurrence.codes | length > 1 %}<br><span class="muted small">also coded as
+        {% for coding in occurrence.codes if coding.code != section.code %}<code>{{ coding.code }}</code> {% endfor %}</span>{% endif %}
+      </td>
+      <td class="num">{{ occurrence.entryCount }}</td>
+      <td>
+        {% for row in occurrence.entryTypes %}<span class="{{ 'unexpected' if not row.expected }}"{% if not row.expected %} title="not among the entry types EPS names for this section"{% endif %}>{{ row.type }} ×{{ row.count }}</span><br>{% else %}<span class="muted">–</span>{% endfor %}
+      </td>
+      <td>
+        {% for row in occurrence.entryProfiles %}
+        {% set page = profile_slugs.get(row.profile.split('|')[0]) %}
+        <span class="{{ 'unexpected' if not row.expected }}"{% if not row.expected %} title="not among the entry profiles EPS names for this section"{% endif %}>{% if page %}<a href="{{ base }}profiles/{{ page }}.html"><code class="small">{{ row.profile | profile_label }}</code></a>{% else %}<code class="small">{{ row.profile | profile_label }}</code>{% endif %} ×{{ row.count }}</span><br>
+        {% endfor %}
+        {% if occurrence.entriesWithoutProfile %}<span class="muted small">{{ occurrence.entriesWithoutProfile }} without meta.profile</span>{% endif %}
+        {% if not occurrence.entryProfiles and not occurrence.entriesWithoutProfile %}<span class="muted">–</span>{% endif %}
+      </td>
+      <td>
+        {% for reference in occurrence.unresolved %}<code class="small unexpected">{{ reference }}</code><br>{% endfor %}
+        {% if occurrence.typeIdMatches %}<span class="unexpected small" title="Relative references that FHIR does not resolve against these fullUrls; matched here by resource type and id only">{{ occurrence.typeIdMatches }} only by type and id</span>{% endif %}
+        {% if not occurrence.unresolved and not occurrence.typeIdMatches %}<span class="muted">–</span>{% endif %}
+      </td>
+      <td>{% if occurrence.emptyReason %}<code class="small">{{ occurrence.emptyReason.code or occurrence.emptyReason.text }}</code>{% else %}<span class="muted">–</span>{% endif %}</td>
+      <td>
+        {% if occurrence.hasNarrative %}{{ occurrence.textStatus or "no status" }}{% else %}<span class="muted">none</span>{% endif %}
+        {% if occurrence.kind == "narrative only" %}<br><span class="tag">narrative only</span>{% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+<p class="muted">No example yet. <a href="{{ repo_url }}/blob/main/CONTRIBUTING.md">Contribute one.</a></p>
+{% endif %}
+{% endblock %}

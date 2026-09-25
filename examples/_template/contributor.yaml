@@ -1,0 +1,9 @@
+# Copy this folder to examples/<your-slug>/ and edit the two files.
+# Only 'name' is required here.
+name: Your name or organisation
+
+# Optional:
+# organization: Example Hospital
+# github: your-github-login
+# contact: you@example.org
+# url: https://example.org

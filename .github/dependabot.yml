@@ -1,0 +1,20 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    labels: [dependencies]
+
+  # Also covers the composite action in .github/actions/setup-validator.
+  - package-ecosystem: github-actions
+    directory: "/.github/actions/setup-validator"
+    schedule:
+      interval: weekly
+    labels: [dependencies]
+
+  - package-ecosystem: pip
+    directory: "/"
+    schedule:
+      interval: weekly
+    labels: [dependencies]

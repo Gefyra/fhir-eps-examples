@@ -1,0 +1,75 @@
+{% extends "base.html.j2" %}
+{% block title %}Profiles · {{ site_title }}{% endblock %}
+{% block content %}
+<h1>Profiles</h1>
+<p class="lede">
+  Which profiles the resources in the collection declare in
+  <code>meta.profile</code>. Every EPS profile is listed, so the ones without an
+  example stand out.
+</p>
+
+<p class="filter-row">
+  <label for="filter">Filter</label>
+  <input id="filter" type="search" data-filter-target=".profile-table"
+         placeholder="profile, resource type…" autocomplete="off">
+</p>
+
+{% set eps_profiles = run.profiles.eps or [] %}
+{% set other_profiles = run.profiles.other or [] %}
+
+<h2>EPS profiles <span class="muted">({{ eps_profiles | length }}{% if model.version %}, {{ model.package }}#{{ model.version }}{% endif %})</span></h2>
+<table class="profile-table">
+  <thead>
+    <tr><th>Profile</th><th>Resource type</th><th class="num">Resources</th><th class="num">Submissions</th></tr>
+  </thead>
+  <tbody>
+    {% for entry in eps_profiles %}
+    <tr data-search="{{ entry.label }} {{ entry.title }} {{ entry.types | join(' ') }}">
+      <td>
+        <a href="{{ entry.slug }}.html">{{ entry.title or entry.label }}</a>
+        <br><code class="small muted">{{ entry.label }}</code>
+        {% for version in entry.versions %}<span class="tag">|{{ version }}</span> {% endfor %}
+      </td>
+      <td>{{ entry.types | join(", ") }}</td>
+      {% if entry.resourceCount %}
+      <td class="num">{{ entry.resourceCount }}</td>
+      <td class="num">{{ entry.submissionCount }}</td>
+      {% else %}
+      <td colspan="2" class="muted">no example yet</td>
+      {% endif %}
+    </tr>
+    {% else %}
+    <tr><td colspan="4" class="muted">The EPS model is missing; run <code>python -m tools ig-model</code>.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+<p class="muted small">
+  Declared means named in <code>meta.profile</code>. Document Bundles are also
+  validated against the enforced Bundle profile whether they declare it or not;
+  that is shown on the profile's page, not counted here.
+</p>
+
+<h2>Other declared profiles <span class="muted">({{ other_profiles | length }})</span></h2>
+<p class="muted">IPS, national and any other profiles declared in the collection.</p>
+<table class="profile-table">
+  <thead>
+    <tr><th>Profile</th><th>Resource types</th><th class="num">Resources</th><th class="num">Submissions</th></tr>
+  </thead>
+  <tbody>
+    {% for entry in other_profiles %}
+    <tr data-search="{{ entry.url }} {{ entry.types | join(' ') }}">
+      <td>
+        <a href="{{ entry.slug }}.html">{{ entry.label }}</a>
+        {% for version in entry.versions %}<span class="tag">|{{ version }}</span> {% endfor %}
+        <br><code class="small muted">{{ entry.url }}</code>
+      </td>
+      <td>{{ entry.types | join(", ") }}</td>
+      <td class="num">{{ entry.resourceCount }}</td>
+      <td class="num">{{ entry.submissionCount }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="4" class="muted">None yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.html.j2" %}
+{% block title %}{{ profile.title or profile.label }} · Profiles{% endblock %}
+{% block content %}
+<nav class="crumbs">
+  <a href="{{ base }}index.html">Collection</a> /
+  <a href="{{ base }}profiles/index.html">Profiles</a> /
+  <code>{{ profile.label }}</code>
+</nav>
+
+<h1>{{ profile.title or profile.label }}</h1>
+<p class="lede">
+  <code>{{ profile.url }}</code>
+  {% for version in profile.versions %}<span class="tag">declared as |{{ version }}</span> {% endfor %}
+  <br>
+  {% if profile.eps %}
+  EPS profile on <code>{{ profile.types | join(", ") }}</code>
+  {% set page = eps_profile_url(profile.url) %}
+  {% if page %}· <a href="{{ page }}">specification</a>{% endif %}
+  {% else %}
+  Not part of EPS{% if model.version %} {{ model.version }}{% endif %}; declared on
+  <code>{{ profile.types | join(", ") }}</code>.
+  {% endif %}
+</p>
+
+<p>
+  {% if profile.resourceCount %}
+  Declared by {{ profile.resourceCount }} resource(s) in {{ profile.submissionCount }} submission(s).
+  {% else %}
+  <strong>No example yet:</strong> no resource in the collection declares this profile.
+  {% endif %}
+  {% if profile.eps and profile.undeclaredCount %}
+  {{ profile.undeclaredCount }} other {{ profile.types | join(", ") }} resource(s) in the collection
+  do not declare it.
+  {% endif %}
+</p>
+{% if profile.enforcedFileCount %}
+<p class="muted">
+  {{ profile.enforcedFileCount }} document Bundle(s) were validated against this
+  profile because it is enforced, whether they declare it or not.
+</p>
+{% endif %}
+
+{% if profile.resources %}
+<div class="scroll-x">
+<table class="comparison">
+  <thead>
+    <tr><th>Submission</th><th>File</th><th>Resource</th><th>Declared profiles</th></tr>
+  </thead>
+  <tbody>
+    {% for row in profile.resources %}
+    <tr>
+      <td><a href="{{ base }}submissions/{{ row.submission }}/index.html">{{ row.title }}</a></td>
+      <td><a href="{{ base }}submissions/{{ row.submission }}/{{ row.file }}.html"><code class="small">{{ row.file }}</code></a></td>
+      <td>
+        {{ row.resourceType }}{% if row.id %} <code class="small">{{ row.id }}</code>{% endif %}
+        {% if row.fullUrl %}<br><code class="small muted">{{ row.fullUrl }}</code>{% endif %}
+      </td>
+      <td>
+        {% for canonical in row.profiles %}
+        {% set page = profile_slugs.get(canonical.split('|')[0]) %}
+        {% if page %}<a href="{{ page }}.html"><code class="small">{{ canonical }}</code></a>{% else %}<code class="small">{{ canonical }}</code>{% endif %}<br>
+        {% endfor %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+{% endblock %}

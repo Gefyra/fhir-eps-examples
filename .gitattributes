@@ -1,0 +1,3 @@
+# Examples are kept exactly as they were contributed, line endings included,
+# whatever core.autocrlf says on the machine that commits them.
+examples/** -text

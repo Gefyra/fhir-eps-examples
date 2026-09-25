@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}{{ site_title }}{% endblock %}</title>
+<link rel="stylesheet" href="{{ base }}assets/style.css">
+<link rel="stylesheet" href="{{ base }}assets/pygments.css">
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="{{ base }}index.html">{{ site_title }}</a>
+  <nav>
+    <a href="{{ base }}index.html">Collection</a>
+    <a href="{{ base }}sections/index.html">Sections</a>
+    <a href="{{ base }}profiles/index.html">Profiles</a>
+    <a href="{{ base }}contributors/index.html">Contributors</a>
+    <a href="{{ repo_url }}">Repository</a>
+  </nav>
+</header>
+
+<main>
+{% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+  <p>
+    Validated with the HL7 FHIR validator {{ run.validator.version }}
+    {% if run.terminology %}· terminology {{ run.terminology }}{% endif %}
+    {% if run.generatedAt %}· generated {{ run.generatedAt }}{% endif %}
+    {% if run.git.sha %}· commit <code>{{ run.git.sha[:8] }}</code>{% endif %}
+  </p>
+  <p>
+    An independent community collection, <strong>not an official HL7 Europe
+    publication</strong>. Examples are validated against the
+    <a href="{{ eps_url }}">HL7 Europe Patient Summary{% if model.version %} {{ model.version }}{% endif %}</a>.
+  </p>
+  <p>
+    Validation findings describe the example, not the contributor. Errors are
+    expected and welcome: this collection documents what real implementations
+    look like.
+  </p>
+  <p>
+    <a href="{{ base }}results.json">results.json</a> ·
+    <a href="{{ base }}sections.json">sections.json</a> ·
+    <a href="{{ base }}profiles.json">profiles.json</a> ·
+    <a href="{{ base }}badge.json">badge.json</a>
+  </p>
+</footer>
+
+<script src="{{ base }}assets/app.js"></script>
+</body>
+</html>

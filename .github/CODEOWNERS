@@ -1,0 +1,8 @@
+# Submissions under examples/ need no code owner review; the tooling and the
+# configuration that decides how everything is validated does.
+/tools/                     @patrick-werner
+/schema/                    @patrick-werner
+/.github/                   @patrick-werner
+/validation.config.yaml     @patrick-werner
+/pyproject.toml             @patrick-werner
+/Makefile                   @patrick-werner

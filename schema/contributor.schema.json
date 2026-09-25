@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gefyra.github.io/fhir-eps-examples/schema/contributor.schema.json",
+  "title": "Contributor",
+  "description": "Identity of a contributor folder under examples/. Only 'name' is required.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 100,
+      "description": "Person or organisation that owns this folder."
+    },
+    "organization": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 200
+    },
+    "github": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9-]{1,39}$",
+      "description": "GitHub login without the leading @."
+    },
+    "contact": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 200,
+      "description": "Contact address, e.g. an e-mail address or a Zulip handle."
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https?://",
+      "maxLength": 300
+    }
+  }
+}

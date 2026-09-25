@@ -1,0 +1,72 @@
+name: PR comment
+
+# Runs after "Validate PR" in the context of the base repository, so it may
+# write a comment even when the pull request comes from a fork. It never checks
+# out the pull request code and never executes anything from the artifacts.
+on:
+  workflow_run:
+    workflows: ["Validate PR"]
+    types: [completed]
+
+permissions:
+  pull-requests: write
+  actions: read
+  contents: read
+
+jobs:
+  comment:
+    name: Sticky comment
+    if: ${{ github.event.workflow_run.event == 'pull_request' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Download the pull request context
+        uses: actions/download-artifact@v8
+        with:
+          name: pr-context
+          path: pr-context
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download the validation results
+        continue-on-error: true
+        uses: actions/download-artifact@v8
+        with:
+          name: validation-results
+          path: validation-results
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      # pr.json comes from a workflow that may have run on fork code, so the
+      # pull request number is confirmed against the API before it is used.
+      - name: Resolve and verify the pull request
+        id: context
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          EXPECTED_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          number=$(python -c "import json;print(int(json.load(open('pr-context/pr.json'))['number']))")
+          actual=$(gh api "repos/$REPO/pulls/$number" --jq .head.sha)
+          if [ "$actual" != "$EXPECTED_SHA" ]; then
+            echo "pull request $number is at $actual, the run was for $EXPECTED_SHA - skipping"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          body=pr-context/pr-comment.md
+          if [ -f validation-results/.ci/pr-comment.md ]; then
+            body=validation-results/.ci/pr-comment.md
+          fi
+          echo "number=$number" >> "$GITHUB_OUTPUT"
+          echo "body=$body" >> "$GITHUB_OUTPUT"
+          echo "skip=false" >> "$GITHUB_OUTPUT"
+
+      - name: Post or update the comment
+        if: steps.context.outputs.skip == 'false'
+        uses: marocchino/sticky-pull-request-comment@v3
+        with:
+          header: fhir-eps-validation
+          number: ${{ steps.context.outputs.number }}
+          path: ${{ steps.context.outputs.body }}
+          recreate: true
+          skip_unchanged: true

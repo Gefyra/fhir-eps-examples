@@ -1,0 +1,63 @@
+name: Set up FHIR validator
+description: >-
+  Java, Python, the tooling, the pinned validator jar and every cache that makes
+  a validation run fast. Used by the pull request and the main workflow.
+
+outputs:
+  validator-version:
+    description: The validator version pinned in validation.config.yaml.
+    value: ${{ steps.config.outputs.validator_version }}
+  config-hash:
+    description: Cache key covering the config and all implementation guides in use.
+    value: ${{ steps.config.outputs.config_hash }}
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Java
+      uses: actions/setup-java@v6
+      with:
+        distribution: temurin
+        java-version: "21"
+
+    - name: Set up Python
+      uses: actions/setup-python@v7
+      with:
+        python-version: "3.12"
+        cache: pip
+        cache-dependency-path: pyproject.toml
+
+    - name: Install the tooling
+      shell: bash
+      run: pip install -e .
+
+    - name: Read the configuration
+      id: config
+      shell: bash
+      run: python -m tools print-config --github-output
+
+    - name: Restore the validator jar
+      uses: actions/cache@v6
+      with:
+        path: .cache/validator
+        key: validator-jar-${{ steps.config.outputs.validator_version }}
+
+    - name: Ensure the validator jar
+      shell: bash
+      run: python -m tools ensure-validator
+
+    - name: Restore the FHIR package cache
+      uses: actions/cache@v6
+      with:
+        path: ~/.fhir/packages
+        key: fhir-packages-${{ runner.os }}-${{ steps.config.outputs.config_hash }}
+        restore-keys: |
+          fhir-packages-${{ runner.os }}-
+
+    - name: Restore the terminology cache
+      uses: actions/cache@v6
+      with:
+        path: .cache/txcache
+        key: txcache-${{ steps.config.outputs.validator_version }}-${{ github.run_id }}
+        restore-keys: |
+          txcache-${{ steps.config.outputs.validator_version }}-

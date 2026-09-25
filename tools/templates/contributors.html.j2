@@ -1,0 +1,37 @@
+{% extends "base.html.j2" %}
+{% block title %}Contributors · {{ site_title }}{% endblock %}
+{% block content %}
+<h1>Contributors</h1>
+<p class="lede">
+  Everyone who has put an example into this collection. Contributions are
+  credited by folder, and the git history records who added what.
+</p>
+
+{% for contributor in contributors %}
+<section class="card contributor">
+  <h2>
+    {{ contributor.name }}
+    {% if contributor.github %}
+    <a class="small" href="https://github.com/{{ contributor.github }}">@{{ contributor.github }}</a>
+    {% endif %}
+  </h2>
+  {% if contributor.organization %}<p class="muted">{{ contributor.organization }}</p>{% endif %}
+  {% if contributor.url %}<p><a href="{{ contributor.url }}">{{ contributor.url }}</a></p>{% endif %}
+  <p class="muted">
+    {% for status in statuses %}
+    {% if contributor.counts[status] %}{{ status | status_icon }} {{ contributor.counts[status] }} {{ status | status_label }}{% if not loop.last %} · {% endif %}{% endif %}
+    {% endfor %}
+  </p>
+  <ul>
+    {% for submission in contributor.submissions %}
+    <li>
+      <a href="{{ base }}submissions/{{ submission.contributor }}/{{ submission.slug }}/index.html">{{ submission.title }}</a>
+      <span class="muted small">{{ submission.stars | stars }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% else %}
+<p class="muted">No contributors yet.</p>
+{% endfor %}
+{% endblock %}

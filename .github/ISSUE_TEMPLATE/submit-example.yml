@@ -1,0 +1,70 @@
+name: Submit an example
+description: Contribute a patient summary example without opening a pull request. A maintainer will add it for you.
+title: "Example: "
+labels: [submission]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        Thank you for contributing. Please make sure the example contains no
+        patient-identifiable data before you paste it here — this issue is
+        public, and it stays public even if the issue is closed.
+
+  - type: input
+    id: title
+    attributes:
+      label: Title
+      description: A short name for the example, e.g. "Patient summary from our EHR".
+    validations:
+      required: true
+
+  - type: dropdown
+    id: origin
+    attributes:
+      label: Origin
+      options:
+        - real-world
+        - derived-from-real
+        - synthetic
+    validations:
+      required: true
+
+  - type: textarea
+    id: resource
+    attributes:
+      label: The example
+      description: >-
+        Ideally one document Bundle as JSON or XML. Document Bundles are
+        validated against the EPS Bundle profile whether they declare it or not;
+        declare the profiles your system claims in meta.profile of the
+        resources. Very large documents are better sent as a file by e-mail.
+      render: json
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: >-
+        Which system produced it, in which country, and anything a reader should
+        know about the way it is modelled — which sections it fills and which it
+        leaves out.
+    validations:
+      required: true
+
+  - type: input
+    id: custodian
+    attributes:
+      label: Who can answer questions about this example?
+      description: A name, and optionally a GitHub login or a contact address.
+
+  - type: checkboxes
+    id: declarations
+    attributes:
+      label: Declarations
+      options:
+        - label: The example contains no patient-identifiable data.
+          required: true
+        - label: I may publish this example, and I contribute it under the Apache 2.0 licence.
+          required: true

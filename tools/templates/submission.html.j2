@@ -1,0 +1,205 @@
+{% extends "base.html.j2" %}
+{% block title %}{{ submission.title }} · {{ site_title }}{% endblock %}
+{% block content %}
+<nav class="crumbs"><a href="{{ base }}index.html">Collection</a> / <code>{{ submission.id }}</code></nav>
+
+<h1>{{ submission.title }}</h1>
+<p class="status-line status-{{ submission.status }}">
+  {{ submission.status | status_icon }} {{ submission.status | status_label }}
+  <span class="muted">— {{ submission.counts.errors }} error(s),
+  {{ submission.counts.warnings }} warning(s),
+  {{ submission.counts.information }} informational,
+  {{ submission.counts.suppressed }} suppressed</span>
+</p>
+
+{% if submission.description %}<p class="lede">{{ submission.description }}</p>{% endif %}
+
+<div class="cards">
+  <section class="card">
+    <h2>Metadata</h2>
+    <dl>
+      <dt>Contributor</dt><dd>{{ submission.contributor }}</dd>
+      <dt>Custodian</dt>
+      <dd>
+        {{ submission.custodian.name }}
+        {% if submission.custodian.github %}
+        (<a href="https://github.com/{{ submission.custodian.github }}">@{{ submission.custodian.github }}</a>)
+        {% endif %}
+      </dd>
+      <dt>Origin</dt><dd>{{ submission.origin }}</dd>
+      {% if submission.country %}<dt>Country</dt><dd>{{ submission.country }}</dd>{% endif %}
+      <dt>FHIR version</dt><dd>{{ submission.fhirVersion }}</dd>
+      {% if submission.submittedOn %}<dt>Added</dt><dd>{{ submission.submittedOn }}</dd>{% endif %}
+      {% if submission.source %}
+      <dt>Source</dt>
+      <dd>
+        {% for key, value in submission.source.items() %}{{ key }}: {{ value }}{% if not loop.last %} · {% endif %}{% endfor %}
+      </dd>
+      {% endif %}
+    </dl>
+  </section>
+
+  <section class="card">
+    <h2>Rating <span class="stars">{{ submission.stars | stars }}</span></h2>
+    {% if submission.starReasons %}
+    <ul class="reasons">
+      {% for reason in submission.starReasons %}<li>{{ reason }}</li>{% endfor %}
+    </ul>
+    {% else %}
+    <p class="muted">No level reached yet. Levels 2 and 4 are granted by maintainers, level 3 by the validator.</p>
+    {% endif %}
+  </section>
+
+  <section class="card">
+    <h2>Validated against</h2>
+    <ul class="igs">
+      {% for ig in submission.igs %}<li><code>{{ ig | ig_label }}</code></li>{% else %}<li class="muted">base FHIR only</li>{% endfor %}
+    </ul>
+    {% set enforced = submission.files | map(attribute="enforcedProfile") | select | unique | list %}
+    {% if enforced %}
+    <p class="small">
+      Document Bundles are also validated against
+      {% for profile in enforced %}<code>{{ profile | profile_label }}</code>{% if not loop.last %}, {% endif %}{% endfor %}
+      (enforced), in addition to the profiles they declare.
+    </p>
+    {% elif not submission.enforceProfile %}
+    <p class="small muted">
+      <code>enforceProfile: false</code> — validated only against the declared profiles.
+    </p>
+    {% endif %}
+  </section>
+</div>
+
+<h2>Files</h2>
+<table>
+  <thead><tr><th>File</th><th>Resource</th><th>Validated against</th><th>Status</th><th class="num">Findings</th></tr></thead>
+  <tbody>
+    {% for file in submission.files %}
+    <tr>
+      <td><a href="{{ file.name }}.html">{{ file.name }}</a></td>
+      <td>{{ file.resourceType or "–" }}{% if file.bundleType %} <span class="muted small">({{ file.bundleType }})</span>{% endif %}</td>
+      <td>
+        {% for profile in file.rootProfiles %}<code class="small">{{ profile }}</code>{% if profile == file.enforcedProfile %} <span class="tag">also enforced</span>{% endif %}<br>{% endfor %}
+        {% if file.enforcedProfile and file.enforcedProfile not in file.rootProfiles %}<code class="small">{{ file.enforcedProfile }}</code> <span class="tag">enforced</span><br>{% endif %}
+        {% if not file.rootProfiles and not file.enforcedProfile %}<span class="muted">no profile — base FHIR only</span>{% endif %}
+      </td>
+      <td class="status-{{ file.status }}">{{ file.status | status_icon }} {{ file.status | status_label }}</td>
+      <td class="num">{{ file.counts.errors }} / {{ file.counts.warnings }} / {{ file.counts.information }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% for file, compositions in checklists %}
+{% for composition in compositions %}
+<h2>EPS sections{% if checklists | length > 1 or compositions | length > 1 %} <span class="muted">— {{ file.name }}{% if composition.compositionId %}, Composition {{ composition.compositionId }}{% endif %}</span>{% endif %}</h2>
+<table class="checklist">
+  <thead><tr><th>EPS section</th><th>Code</th><th>EPS</th><th>In this document</th></tr></thead>
+  <tbody>
+    {% for row in composition.rows %}
+    <tr class="state-{{ row.state | replace(' ', '-') }}">
+      <td><a href="{{ base }}sections/{{ section_slugs.get(row.key, 'index') }}.html">{{ row.title }}</a></td>
+      <td><code class="small">{{ row.code }}</code></td>
+      <td>{{ row.cardinality }} <span class="muted small">{{ row.requirement }}</span></td>
+      <td>
+        {% if row.state == "present" %}✅ {{ row.detail }}
+        {% elif row.state == "required but missing" %}❌ required but missing
+        {% else %}<span class="muted">– absent</span>{% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+    {% for other in composition.others %}
+    <tr class="state-other">
+      <td><a href="{{ base }}sections/{{ section_slugs.get(other.key, 'index') }}.html">{{ other.title or "(no title)" }}</a></td>
+      <td>{% for coding in other.codes %}<code class="small">{{ coding.code }}</code>{% if not loop.last %}, {% endif %}{% else %}<span class="muted">–</span>{% endfor %}</td>
+      <td><span class="muted small">not in EPS</span></td>
+      <td>{{ other.detail }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endfor %}
+{% endfor %}
+
+<h2>Validation findings</h2>
+<p class="filter-row">
+  <label for="severity">Show</label>
+  <select id="severity" data-severity-target=".issue-table">
+    <option value="all">everything</option>
+    <option value="error">errors only</option>
+    <option value="warning">errors and warnings</option>
+  </select>
+</p>
+
+{% set has_issues = submission.files | map(attribute="issues") | select | list %}
+{% if has_issues %}
+<table class="issue-table">
+  <thead><tr><th>Severity</th><th>File</th><th>Location</th><th>Message id</th><th>Details</th></tr></thead>
+  <tbody>
+    {% for file in submission.files %}
+    {% for issue in file.issues %}
+    <tr class="severity-{{ issue.severity }}{% if issue.suppressed %} suppressed{% endif %}"
+        data-severity="{{ issue.severity }}">
+      <td>{{ issue.severity }}{% if issue.suppressed %} <span class="tag">suppressed</span>{% endif %}</td>
+      <td><a href="{{ file.name }}.html{% if issue.line %}#L-{{ issue.line }}{% endif %}">{{ file.name }}</a></td>
+      <td><code class="small">{{ issue.location }}</code></td>
+      <td><code class="small">{{ issue.messageId }}</code></td>
+      <td>
+        {{ issue.details }}
+        {% if issue.suppressed %}<p class="justification">Accepted: {{ issue.justification }}</p>{% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="muted">The validator reported nothing at all for this submission.</p>
+{% endif %}
+
+{% for file in submission.files if file.status == "not-validated" %}
+<p class="warning-box">
+  <strong>{{ file.name }} was not validated.</strong> {{ file.reason }}
+</p>
+{% endfor %}
+
+{% if submission.staleSuppressions %}
+<h2>Stale known-issue rules</h2>
+<p class="muted">
+  These <code>knownIssues</code> rules matched nothing in this run. Either the
+  finding is gone and the rule can be deleted, or the rule never matched.
+</p>
+<table>
+  <thead><tr><th>Rule</th><th>Matcher</th><th>Justification</th></tr></thead>
+  <tbody>
+    {% for rule in submission.staleSuppressions %}
+    <tr>
+      <td class="num">{{ rule.index }}</td>
+      <td>{% for key, value in rule.matcher.items() %}<code class="small">{{ key }}={{ value }}</code> {% endfor %}</td>
+      <td>{{ rule.justification }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+{% if submission.pii %}
+<h2>Possible identifiable data</h2>
+<p class="muted">
+  Heuristics, not findings — they are shown so that a reader can double-check.
+</p>
+<table>
+  <thead><tr><th>File</th><th>Location</th><th>Note</th></tr></thead>
+  <tbody>
+    {% for finding in submission.pii %}
+    <tr><td>{{ finding.file }}</td><td><code class="small">{{ finding.location }}</code></td><td>{{ finding.note }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+{% if readme %}
+<h2>README</h2>
+<article class="readme">{{ readme | safe }}</article>
+{% endif %}
+{% endblock %}

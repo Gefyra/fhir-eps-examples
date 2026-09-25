@@ -1,0 +1,56 @@
+# Only 'title' and 'origin' are required. Everything else is optional:
+# defaults come from validation.config.yaml or from contributor.yaml, and the
+# sections and profiles are read out of the example resources themselves.
+title: Short title of this example
+origin: synthetic # real-world | derived-from-real | synthetic
+
+# --- Optional from here on ---------------------------------------------------
+
+# One or two sentences; longer prose belongs in README.md.
+# description: Patient summary as our EHR exports it for cross-border care.
+
+# The country whose rules or systems the example comes from (ISO 3166-1
+# alpha-2, upper case).
+# country: FI
+
+# FHIR version of the example files. Default: 4.0.1
+# fhirVersion: "4.0.1"
+
+# Extra implementation guides on top of the defaults for this FHIR version:
+# the package of every profile your resources declare in meta.profile that
+# EPS does not bring along, national base profiles typically.
+# Always pin a version; #current, #dev and #latest are rejected.
+# igs:
+#   - hl7.fhir.fi.base#2.0.0
+
+# Every document Bundle is validated against the EPS Bundle profile, whether
+# it declares it or not. Set this to false if your document is not meant to be
+# a patient summary. Default: true
+# enforceProfile: false
+
+# Defaults to contributor.yaml.
+# custodian:
+#   name: Your name
+#   github: your-github-login
+#   contact: you@example.org
+
+# Where the example was produced.
+# source:
+#   vendor: Example Vendor
+#   system: Example EHR
+#   project: Example project
+#   url: https://example.org/project
+
+# Validation findings you know about and accept. All given matchers must match;
+# 'justification' is mandatory. Suppressed issues do not change the status but
+# are counted and shown on the site.
+# knownIssues:
+#   - messageId: Terminology_TX_NoValid_1
+#     file: Bundle-example.json
+#     justification: The local code system is not published; this is expected.
+
+# Maintainers only:
+# review:
+#   smeReviewed: true
+#   reviewer: Reviewer name
+#   date: 2026-01-31

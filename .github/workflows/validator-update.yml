@@ -1,0 +1,75 @@
+name: Validator update
+
+# Bumping the validator is a reviewed pull request with real validation results
+# attached, not a silent "latest".
+on:
+  schedule:
+    - cron: "0 5 * * 2"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bump:
+    name: Propose a validator bump
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Needed for the GITHUB_TOKEN fallback: pushing the branch and opening the
+    # pull request. With VALIDATOR_UPDATE_TOKEN set, that token's scopes apply.
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install the tooling
+        run: pip install -e .
+
+      - name: Compare the pinned version with the latest release
+        id: versions
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          current=$(python -m tools print-config --key validator.version)
+          latest=$(gh release view --repo hapifhir/org.hl7.fhir.core --json tagName --jq .tagName)
+          echo "current=$current" >> "$GITHUB_OUTPUT"
+          echo "latest=$latest" >> "$GITHUB_OUTPUT"
+          if [ "$current" = "$latest" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Pin the new version
+        if: steps.versions.outputs.changed == 'true'
+        run: python -m tools set-config validator.version "${{ steps.versions.outputs.latest }}"
+
+      # A pull request created with GITHUB_TOKEN does not start other workflows,
+      # so VALIDATOR_UPDATE_TOKEN (a fine-grained PAT) is used when available.
+      # Without it, close and reopen the pull request once to start the checks.
+      - name: Open the pull request
+        if: steps.versions.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ secrets.VALIDATOR_UPDATE_TOKEN || secrets.GITHUB_TOKEN }}
+          branch: chore/validator-${{ steps.versions.outputs.latest }}
+          delete-branch: true
+          commit-message: "Pin FHIR validator ${{ steps.versions.outputs.latest }}"
+          title: "Pin FHIR validator ${{ steps.versions.outputs.latest }}"
+          labels: validator
+          body: |
+            The pinned validator moves from `${{ steps.versions.outputs.current }}`
+            to `${{ steps.versions.outputs.latest }}`.
+
+            Because `validation.config.yaml` changed, this pull request revalidates
+            the whole collection. Compare the results in the pull request comment
+            with the current state of the site before merging: a new validator
+            version routinely changes which findings are reported.
+
+            Release notes:
+            https://github.com/hapifhir/org.hl7.fhir.core/releases/tag/${{ steps.versions.outputs.latest }}

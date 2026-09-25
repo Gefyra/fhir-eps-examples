@@ -1,0 +1,59 @@
+{% extends "base.html.j2" %}
+{% block title %}{{ file.name }} · {{ submission.title }}{% endblock %}
+{% block content %}
+<nav class="crumbs">
+  <a href="{{ base }}index.html">Collection</a> /
+  <a href="index.html">{{ submission.id }}</a> /
+  <code>{{ file.name }}</code>
+</nav>
+
+<h1>{{ file.name }}</h1>
+<p class="status-line status-{{ file.status }}">
+  {{ file.status | status_icon }} {{ file.status | status_label }}
+  <span class="muted">— {{ file.counts.errors }} error(s), {{ file.counts.warnings }} warning(s),
+  {{ file.counts.information }} informational, {{ file.counts.suppressed }} suppressed</span>
+</p>
+<p>
+  <a href="{{ repo_url }}/blob/main/{{ file.path }}">View on GitHub</a>
+  · {{ file.resourceType or "unknown resource" }}{% if file.bundleType %} of type <code>{{ file.bundleType }}</code>{% endif %}
+  {% if file.rootProfiles %}· declares
+  {% for profile in file.rootProfiles %}<code class="small">{{ profile }}</code>{% if not loop.last %}, {% endif %}{% endfor %}
+  {% else %}· declares no profile on the root resource
+  {% endif %}
+</p>
+{% if file.enforcedProfile %}
+<p>
+  Also validated against <code class="small">{{ file.enforcedProfile }}</code>
+  <span class="tag">enforced</span> — every document Bundle is, whether it
+  declares the profile or not.
+</p>
+{% endif %}
+
+{% if file.issues %}
+<h2>Findings in this file</h2>
+<table class="issue-table">
+  <thead><tr><th>Severity</th><th>Line</th><th>Location</th><th>Message id</th><th>Details</th></tr></thead>
+  <tbody>
+    {% for issue in file.issues %}
+    <tr class="severity-{{ issue.severity }}{% if issue.suppressed %} suppressed{% endif %}" data-severity="{{ issue.severity }}">
+      <td>{{ issue.severity }}{% if issue.suppressed %} <span class="tag">suppressed</span>{% endif %}</td>
+      <td class="num">{% if issue.line %}<a href="#L-{{ issue.line }}">{{ issue.line }}</a>{% else %}–{% endif %}</td>
+      <td><code class="small">{{ issue.location }}</code></td>
+      <td><code class="small">{{ issue.messageId }}</code></td>
+      <td>
+        {{ issue.details }}
+        {% if issue.suppressed %}<p class="justification">Accepted: {{ issue.justification }}</p>{% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+{% if file.reason %}
+<p class="warning-box">{{ file.reason }}</p>
+{% endif %}
+
+<h2>Source</h2>
+<div class="source">{{ source | safe }}</div>
+{% endblock %}

@@ -1,0 +1,658 @@
+{
+  "schemaVersion": 1,
+  "package": "hl7.fhir.eu.eps",
+  "version": "1.0.0-ballot",
+  "composition": "http://hl7.eu/fhir/eps/StructureDefinition/composition-eu-eps",
+  "profiles": [
+    {
+      "url": "http://hl7.eu/fhir/eps/StructureDefinition/allergyintolerance-obl-eu-eps",
+      "name": "AllergyIntoleranceOblEuEps",
+      "title": "AllergyIntolerance - Obligations  (EPS)",
+      "type": "AllergyIntolerance"
+    },
+    {
+      "url": "http://hl7.eu/fhir/eps/StructureDefinition/bundle-eu-eps",
+      "name": "BundleEuEps",
+      "title": "Bundle (EPS)",
+      "type": "Bundle"
+    },
+    {
+      "url": "http://hl7.eu/fhir/eps/StructureDefinition/composition-eu-eps",
+      "name": "CompositionEuEps",
+      "title": "Composition (EPS)",
+      "type": "Composition"
+    },
+    {
+      "url": "http://hl7.eu/fhir/eps/StructureDefinition/condition-obl-eu-eps",
+      "name": "ConditionOblEuEps",
+      "title": "Condition - Obligations (EPS)",
+      "type": "Condition"
+    },
+    {
+      "url": "http://hl7.eu/fhir/eps/StructureDefinition/consent-eu-eps",
+      "name": "ConsentEuEps",
+      "title": "Consent: Advance Directives (EPS)",
+      "type": "Consent"
+    },
+    {
+      "url": "http://hl7.eu/fhir/eps/StructureDefinition/device-eu-eps",
+      "name": "DeviceEuEps",
+      "title": "Device (EPS)",
+      "type": "Device"
+    },
+    {
+      "url": "http://hl7.eu/fhir/eps/StructureDefinition/deviceUseStatement-eu-eps",
+      "name": "DeviceUseStatementEuEps",
+      "title": "DeviceUseStatement (EPS)",
+      "type": "DeviceUseStatement"
+    },
+    {
+      "url": "http://hl7.eu/fhir/eps/StructureDefinition/diagnosticReport-eu-eps",
+      "name": "DiagnosticReportEuEps",
+      "title": "DiagnosticReport (EPS)",
+      "type": "DiagnosticReport"
+    },
+    {
+      "url": "http://hl7.eu/fhir/eps/StructureDefinition/flag-alert-obl-eu-eps",
+      "name": "FlagAlertOblEuEps",
+      "title": "Flag :  Alert - Obligations (EPS)",
+      "type": "Flag"
+    },
+    {
+      "url": "http://hl7.eu/fhir/eps/StructureDefinition/immunization-obl-eu-eps",
+      "name": "ImmunizationOblEuEps",
+      "title": "Immunization - Obligations (EPS)",
+      "type": "Immunization"
+    },
+    {
+      "url": "http://hl7.eu/fhir/eps/StructureDefinition/medication-obl-eu-eps",
+      "name": "MedicationOblEuEps",
+      "title": "Medication - Obligations (EPS)",
+      "type": "Medication"
+    },
+    {
+      "url": "http://hl7.eu/fhir/eps/StructureDefinition/medicationrequest-obl-eu-eps",
+      "name": "MedicationRequestOblEuEps",
+      "title": "MedicationRequest - Obligations (EPS)",
+      "type": "MedicationRequest"
+    },
+    {
+      "url": "http://hl7.eu/fhir/eps/StructureDefinition/MedicationStatement-eu-eps",
+      "name": "MedicationStatementEuEps",
+      "title": "MedicationStatement (EPS)",
+      "type": "MedicationStatement"
+    },
+    {
+      "url": "http://hl7.eu/fhir/eps/StructureDefinition/observation-pregnancy-edd-eu-eps",
+      "name": "ObservationPregnancyEddEuEps",
+      "title": "Observation: Pregnancy - Expected Delivery Date (EPS)",
+      "type": "Observation"
+    },
+    {
+      "url": "http://hl7.eu/fhir/eps/StructureDefinition/observation-pregnancy-gestationalAge-eu-eps",
+      "name": "ObservationPregnancyGestationalAgeEuEps",
+      "title": "Observation: Pregnancy - Gestational Age (EPS)",
+      "type": "Observation"
+    },
+    {
+      "url": "http://hl7.eu/fhir/eps/StructureDefinition/observation-pregnancy-outcome-eu-eps",
+      "name": "ObservationPregnancyOutcomeEuEps",
+      "title": "Observation: Pregnancy - Outcome (EPS)",
+      "type": "Observation"
+    },
+    {
+      "url": "http://hl7.eu/fhir/eps/StructureDefinition/observation-pregnancy-status-eu-ips",
+      "name": "ObservationPregnancyStatusEuEps",
+      "title": "Observation: Pregnancy - Status (EPS)",
+      "type": "Observation"
+    },
+    {
+      "url": "http://hl7.eu/fhir/eps/StructureDefinition/observation-travel-eu-eps",
+      "name": "ObservationTravelEuEps",
+      "title": "Observation: Country Visited (EPS)",
+      "type": "Observation"
+    },
+    {
+      "url": "http://hl7.eu/fhir/eps/StructureDefinition/organization-obl-eu-eps",
+      "name": "OrganizationOblEuEps",
+      "title": "Organization - Obligations (EPS)",
+      "type": "Organization"
+    },
+    {
+      "url": "http://hl7.eu/fhir/eps/StructureDefinition/patient-eu-eps",
+      "name": "PatientEuEps",
+      "title": "Patient (EPS)",
+      "type": "Patient"
+    },
+    {
+      "url": "http://hl7.eu/fhir/eps/StructureDefinition/practitioner-obl-eu-eps",
+      "name": "PractitionerOblEuEps",
+      "title": "Practitioner - Obligations (EPS)",
+      "type": "Practitioner"
+    },
+    {
+      "url": "http://hl7.eu/fhir/eps/StructureDefinition/practitionerrole-obl-eu-eps",
+      "name": "PractitionerRoleOblEuEps",
+      "title": "PractitionerRole - Obligations (EPS)",
+      "type": "PractitionerRole"
+    },
+    {
+      "url": "http://hl7.eu/fhir/eps/StructureDefinition/procedure-eu-eps",
+      "name": "ProcedureEuEps",
+      "title": "Procedure (EPS)",
+      "type": "Procedure"
+    }
+  ],
+  "sections": [
+    {
+      "sliceName": "sectionProblems",
+      "title": "EPS Problems Section",
+      "min": 1,
+      "max": "1",
+      "codes": [
+        {
+          "system": "http://loinc.org",
+          "code": "11450-4",
+          "display": ""
+        }
+      ],
+      "entryProfiles": [
+        "http://hl7.org/fhir/StructureDefinition/Condition",
+        "http://hl7.org/fhir/StructureDefinition/DocumentReference",
+        "http://hl7.eu/fhir/base/StructureDefinition/condition-eu-core"
+      ],
+      "entrySlices": [
+        {
+          "sliceName": "problem",
+          "min": 0,
+          "max": "*",
+          "profiles": [
+            "http://hl7.eu/fhir/base/StructureDefinition/condition-eu-core"
+          ]
+        }
+      ]
+    },
+    {
+      "sliceName": "sectionAllergies",
+      "title": "EPS Allergies and Intolerances Section",
+      "min": 1,
+      "max": "1",
+      "codes": [
+        {
+          "system": "http://loinc.org",
+          "code": "48765-2",
+          "display": ""
+        }
+      ],
+      "entryProfiles": [
+        "http://hl7.org/fhir/StructureDefinition/AllergyIntolerance",
+        "http://hl7.org/fhir/StructureDefinition/DocumentReference",
+        "http://hl7.eu/fhir/base/StructureDefinition/allergyIntolerance-eu-core"
+      ],
+      "entrySlices": [
+        {
+          "sliceName": "allergyOrIntolerance",
+          "min": 0,
+          "max": "*",
+          "profiles": [
+            "http://hl7.eu/fhir/base/StructureDefinition/allergyIntolerance-eu-core"
+          ]
+        }
+      ]
+    },
+    {
+      "sliceName": "sectionMedications",
+      "title": "EPS Medication Summary Section",
+      "min": 1,
+      "max": "1",
+      "codes": [
+        {
+          "system": "http://loinc.org",
+          "code": "10160-0",
+          "display": ""
+        }
+      ],
+      "entryProfiles": [
+        "http://hl7.org/fhir/StructureDefinition/MedicationStatement",
+        "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
+        "http://hl7.org/fhir/StructureDefinition/MedicationAdministration",
+        "http://hl7.org/fhir/StructureDefinition/MedicationDispense",
+        "http://hl7.org/fhir/StructureDefinition/DocumentReference",
+        "http://hl7.eu/fhir/eps/StructureDefinition/MedicationStatement-eu-eps"
+      ],
+      "entrySlices": [
+        {
+          "sliceName": "medicationStatementOrRequest",
+          "min": 0,
+          "max": "*",
+          "profiles": [
+            "http://hl7.eu/fhir/eps/StructureDefinition/MedicationStatement-eu-eps"
+          ]
+        }
+      ]
+    },
+    {
+      "sliceName": "sectionImmunizations",
+      "title": "EPS Immunizations Section",
+      "min": 0,
+      "max": "1",
+      "codes": [
+        {
+          "system": "http://loinc.org",
+          "code": "11369-6",
+          "display": ""
+        }
+      ],
+      "entryProfiles": [
+        "http://hl7.org/fhir/StructureDefinition/Immunization",
+        "http://hl7.org/fhir/StructureDefinition/DocumentReference",
+        "http://hl7.eu/fhir/base/StructureDefinition/immunization-eu-core"
+      ],
+      "entrySlices": [
+        {
+          "sliceName": "immunization",
+          "min": 0,
+          "max": "*",
+          "profiles": [
+            "http://hl7.eu/fhir/base/StructureDefinition/immunization-eu-core"
+          ]
+        }
+      ]
+    },
+    {
+      "sliceName": "sectionResults",
+      "title": "EPS Results Section",
+      "min": 0,
+      "max": "1",
+      "codes": [
+        {
+          "system": "http://loinc.org",
+          "code": "30954-2",
+          "display": ""
+        }
+      ],
+      "entryProfiles": [
+        "http://hl7.org/fhir/StructureDefinition/Observation",
+        "http://hl7.org/fhir/StructureDefinition/DiagnosticReport",
+        "http://hl7.org/fhir/StructureDefinition/DocumentReference",
+        "http://hl7.eu/fhir/base/StructureDefinition/medicalTestResult-eu-core",
+        "http://hl7.eu/fhir/eps/StructureDefinition/diagnosticReport-eu-eps"
+      ],
+      "entrySlices": [
+        {
+          "sliceName": "results-medicalTestResult",
+          "min": 0,
+          "max": "*",
+          "profiles": [
+            "http://hl7.eu/fhir/base/StructureDefinition/medicalTestResult-eu-core"
+          ]
+        },
+        {
+          "sliceName": "results-diagnosticReport",
+          "min": 0,
+          "max": "*",
+          "profiles": [
+            "http://hl7.eu/fhir/eps/StructureDefinition/diagnosticReport-eu-eps"
+          ]
+        }
+      ]
+    },
+    {
+      "sliceName": "sectionProceduresHx",
+      "title": "EPS History of Procedures Section",
+      "min": 1,
+      "max": "1",
+      "codes": [
+        {
+          "system": "http://loinc.org",
+          "code": "47519-4",
+          "display": ""
+        }
+      ],
+      "entryProfiles": [
+        "http://hl7.org/fhir/StructureDefinition/Procedure",
+        "http://hl7.org/fhir/StructureDefinition/DocumentReference",
+        "http://hl7.eu/fhir/eps/StructureDefinition/procedure-eu-eps"
+      ],
+      "entrySlices": [
+        {
+          "sliceName": "procedure",
+          "min": 0,
+          "max": "*",
+          "profiles": [
+            "http://hl7.eu/fhir/eps/StructureDefinition/procedure-eu-eps"
+          ]
+        }
+      ]
+    },
+    {
+      "sliceName": "sectionMedicalDevices",
+      "title": "EPS Medical Devices Section",
+      "min": 1,
+      "max": "1",
+      "codes": [
+        {
+          "system": "http://loinc.org",
+          "code": "46264-8",
+          "display": ""
+        }
+      ],
+      "entryProfiles": [
+        "http://hl7.org/fhir/StructureDefinition/DeviceUseStatement",
+        "http://hl7.org/fhir/StructureDefinition/DocumentReference",
+        "http://hl7.eu/fhir/eps/StructureDefinition/deviceUseStatement-eu-eps"
+      ],
+      "entrySlices": [
+        {
+          "sliceName": "deviceStatement",
+          "min": 0,
+          "max": "*",
+          "profiles": [
+            "http://hl7.eu/fhir/eps/StructureDefinition/deviceUseStatement-eu-eps"
+          ]
+        }
+      ]
+    },
+    {
+      "sliceName": "sectionAdvanceDirectives",
+      "title": "EPS Advance Directives Section",
+      "min": 0,
+      "max": "1",
+      "codes": [
+        {
+          "system": "http://loinc.org",
+          "code": "42348-3",
+          "display": ""
+        }
+      ],
+      "entryProfiles": [
+        "http://hl7.org/fhir/StructureDefinition/Consent",
+        "http://hl7.org/fhir/StructureDefinition/DocumentReference",
+        "http://hl7.eu/fhir/eps/StructureDefinition/consent-eu-eps"
+      ],
+      "entrySlices": [
+        {
+          "sliceName": "advanceDirectivesConsent",
+          "min": 0,
+          "max": "*",
+          "profiles": [
+            "http://hl7.eu/fhir/eps/StructureDefinition/consent-eu-eps"
+          ]
+        }
+      ]
+    },
+    {
+      "sliceName": "sectionAlert",
+      "title": "EPS Alerts Section",
+      "min": 0,
+      "max": "1",
+      "codes": [
+        {
+          "system": "http://loinc.org",
+          "code": "104605-1",
+          "display": ""
+        }
+      ],
+      "entryProfiles": [
+        "http://hl7.org/fhir/StructureDefinition/Flag",
+        "http://hl7.org/fhir/StructureDefinition/DocumentReference",
+        "http://hl7.eu/fhir/base/StructureDefinition/flag-patient-eu-core"
+      ],
+      "entrySlices": [
+        {
+          "sliceName": "flag",
+          "min": 0,
+          "max": "*",
+          "profiles": [
+            "http://hl7.eu/fhir/base/StructureDefinition/flag-patient-eu-core"
+          ]
+        }
+      ]
+    },
+    {
+      "sliceName": "sectionFunctionalStatus",
+      "title": "EPS Functional Status",
+      "min": 0,
+      "max": "1",
+      "codes": [
+        {
+          "system": "http://loinc.org",
+          "code": "47420-5",
+          "display": ""
+        }
+      ],
+      "entryProfiles": [
+        "http://hl7.org/fhir/StructureDefinition/Condition",
+        "http://hl7.org/fhir/StructureDefinition/ClinicalImpression",
+        "http://hl7.org/fhir/StructureDefinition/DocumentReference",
+        "http://hl7.eu/fhir/base/StructureDefinition/condition-eu-core"
+      ],
+      "entrySlices": [
+        {
+          "sliceName": "disability",
+          "min": 0,
+          "max": "*",
+          "profiles": [
+            "http://hl7.eu/fhir/base/StructureDefinition/condition-eu-core"
+          ]
+        },
+        {
+          "sliceName": "functionalAssessment",
+          "min": 0,
+          "max": "*",
+          "profiles": [
+            "http://hl7.org/fhir/StructureDefinition/ClinicalImpression"
+          ]
+        }
+      ]
+    },
+    {
+      "sliceName": "sectionPregnancyHx",
+      "title": "EPS History of Pregnancy Section",
+      "min": 0,
+      "max": "1",
+      "codes": [
+        {
+          "system": "http://loinc.org",
+          "code": "10162-6",
+          "display": ""
+        }
+      ],
+      "entryProfiles": [
+        "http://hl7.org/fhir/StructureDefinition/Resource|4.0.1",
+        "http://hl7.org/fhir/uv/ips/StructureDefinition/Observation-pregnancy-status-uv-ips",
+        "http://hl7.org/fhir/uv/ips/StructureDefinition/Observation-pregnancy-outcome-uv-ips",
+        "http://hl7.eu/fhir/eps/StructureDefinition/observation-pregnancy-gestationalAge-eu-eps"
+      ],
+      "entrySlices": [
+        {
+          "sliceName": "pregnancyStatus",
+          "min": 0,
+          "max": "*",
+          "profiles": [
+            "http://hl7.org/fhir/uv/ips/StructureDefinition/Observation-pregnancy-status-uv-ips"
+          ]
+        },
+        {
+          "sliceName": "pregnancyOutcome",
+          "min": 0,
+          "max": "*",
+          "profiles": [
+            "http://hl7.org/fhir/uv/ips/StructureDefinition/Observation-pregnancy-outcome-uv-ips"
+          ]
+        },
+        {
+          "sliceName": "gestationalAge",
+          "min": 0,
+          "max": "*",
+          "profiles": [
+            "http://hl7.eu/fhir/eps/StructureDefinition/observation-pregnancy-gestationalAge-eu-eps"
+          ]
+        }
+      ]
+    },
+    {
+      "sliceName": "sectionPatientStory",
+      "title": "EPS Patient Story Section",
+      "min": 0,
+      "max": "1",
+      "codes": [
+        {
+          "system": "http://loinc.org",
+          "code": "81338-6",
+          "display": ""
+        }
+      ],
+      "entryProfiles": [
+        "http://hl7.org/fhir/StructureDefinition/Resource|4.0.1"
+      ],
+      "entrySlices": []
+    },
+    {
+      "sliceName": "sectionPlanOfCare",
+      "title": "EPS Plan of Care Section",
+      "min": 0,
+      "max": "1",
+      "codes": [
+        {
+          "system": "http://loinc.org",
+          "code": "18776-5",
+          "display": ""
+        }
+      ],
+      "entryProfiles": [
+        "http://hl7.org/fhir/StructureDefinition/CarePlan",
+        "http://hl7.org/fhir/StructureDefinition/ImmunizationRecommendation",
+        "http://hl7.org/fhir/StructureDefinition/DocumentReference"
+      ],
+      "entrySlices": [
+        {
+          "sliceName": "carePlan",
+          "min": 0,
+          "max": "*",
+          "profiles": [
+            "http://hl7.org/fhir/StructureDefinition/CarePlan"
+          ]
+        },
+        {
+          "sliceName": "immunizationRecommendation",
+          "min": 0,
+          "max": "*",
+          "profiles": [
+            "http://hl7.org/fhir/StructureDefinition/ImmunizationRecommendation"
+          ]
+        }
+      ]
+    },
+    {
+      "sliceName": "sectionSocialHistory",
+      "title": "EPS Social History Section",
+      "min": 0,
+      "max": "1",
+      "codes": [
+        {
+          "system": "http://loinc.org",
+          "code": "29762-2",
+          "display": ""
+        }
+      ],
+      "entryProfiles": [
+        "http://hl7.org/fhir/StructureDefinition/Observation",
+        "http://hl7.org/fhir/StructureDefinition/DocumentReference",
+        "http://hl7.org/fhir/uv/ips/StructureDefinition/Observation-tobaccouse-uv-ips",
+        "http://hl7.org/fhir/uv/ips/StructureDefinition/Observation-alcoholuse-uv-ips"
+      ],
+      "entrySlices": [
+        {
+          "sliceName": "smokingTobaccoUse",
+          "min": 0,
+          "max": "*",
+          "profiles": [
+            "http://hl7.org/fhir/uv/ips/StructureDefinition/Observation-tobaccouse-uv-ips"
+          ]
+        },
+        {
+          "sliceName": "alcoholUse",
+          "min": 0,
+          "max": "*",
+          "profiles": [
+            "http://hl7.org/fhir/uv/ips/StructureDefinition/Observation-alcoholuse-uv-ips"
+          ]
+        }
+      ]
+    },
+    {
+      "sliceName": "sectionVitalSigns",
+      "title": "EPS Vital Signs Section",
+      "min": 0,
+      "max": "1",
+      "codes": [
+        {
+          "system": "http://loinc.org",
+          "code": "8716-3",
+          "display": ""
+        }
+      ],
+      "entryProfiles": [
+        "http://hl7.org/fhir/StructureDefinition/Observation",
+        "http://hl7.org/fhir/StructureDefinition/DocumentReference",
+        "http://hl7.org/fhir/StructureDefinition/vitalsigns"
+      ],
+      "entrySlices": [
+        {
+          "sliceName": "vitalSign",
+          "min": 0,
+          "max": "*",
+          "profiles": [
+            "http://hl7.org/fhir/StructureDefinition/vitalsigns"
+          ]
+        }
+      ]
+    },
+    {
+      "sliceName": "sectionTravelHx",
+      "title": "EPS Travel History Section",
+      "min": 0,
+      "max": "1",
+      "codes": [
+        {
+          "system": "http://loinc.org",
+          "code": "10182-4",
+          "display": ""
+        }
+      ],
+      "entryProfiles": [
+        "http://hl7.org/fhir/StructureDefinition/Observation",
+        "http://hl7.org/fhir/StructureDefinition/DocumentReference",
+        "http://hl7.eu/fhir/eps/StructureDefinition/observation-travel-eu-eps"
+      ],
+      "entrySlices": [
+        {
+          "sliceName": "travelObservation",
+          "min": 0,
+          "max": "*",
+          "profiles": [
+            "http://hl7.eu/fhir/eps/StructureDefinition/observation-travel-eu-eps"
+          ]
+        }
+      ]
+    },
+    {
+      "sliceName": "sectionPatientHx",
+      "title": "EPS Patient History Section",
+      "min": 0,
+      "max": "1",
+      "codes": [
+        {
+          "system": "http://loinc.org",
+          "code": "11329-0",
+          "display": ""
+        }
+      ],
+      "entryProfiles": [
+        "http://hl7.org/fhir/StructureDefinition/Resource|4.0.1"
+      ],
+      "entrySlices": []
+    }
+  ]
+}

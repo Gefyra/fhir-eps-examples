@@ -1,0 +1,292 @@
+{
+  "resourceType": "Bundle",
+  "meta": {
+    "profile": [
+      "http://hl7.eu/fhir/eps/StructureDefinition/bundle-eu-eps"
+    ],
+    "security": [
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        "code": "HTEST",
+        "display": "test health data"
+      }
+    ]
+  },
+  "identifier": {
+    "system": "urn:ietf:rfc:3986",
+    "value": "urn:uuid:6f0e3f5e-8a4b-4c1e-9d77-2b1a3c4d5e6f"
+  },
+  "type": "document",
+  "timestamp": "2026-01-15T09:00:00+01:00",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:1d4c6a52-3c0e-4f59-8f7a-0b2f9e7c1a01",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "1d4c6a52-3c0e-4f59-8f7a-0b2f9e7c1a01",
+        "meta": {
+          "profile": [
+            "http://hl7.eu/fhir/eps/StructureDefinition/composition-eu-eps"
+          ]
+        },
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Patient summary of Anna Example. Replace this skeleton with the document your system produces.</div>"
+        },
+        "identifier": {
+          "system": "urn:ietf:rfc:3986",
+          "value": "urn:uuid:1d4c6a52-3c0e-4f59-8f7a-0b2f9e7c1a01"
+        },
+        "status": "final",
+        "type": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "60591-5",
+              "display": "Patient summary Document"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:5b0c1e2d-7f3a-4b8c-9d1e-2f3a4b5c6d02"
+        },
+        "date": "2026-01-15T09:00:00+01:00",
+        "author": [
+          {
+            "reference": "urn:uuid:9e8d7c6b-5a4f-4e3d-8c2b-1a0f9e8d7c04"
+          }
+        ],
+        "title": "Patient summary",
+        "section": [
+          {
+            "title": "Problems",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "11450-4",
+                  "display": "Problem list - Reported"
+                }
+              ]
+            },
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Asthma, since 2010</div>"
+            },
+            "entry": [
+              {
+                "reference": "urn:uuid:3a2b1c0d-9e8f-4a7b-8c6d-5e4f3a2b1c03"
+              }
+            ]
+          },
+          {
+            "title": "Allergies and intolerances",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "48765-2",
+                  "display": "Allergies and adverse reactions Document"
+                }
+              ]
+            },
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">No known allergies</div>"
+            },
+            "emptyReason": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/list-empty-reason",
+                  "code": "nilknown",
+                  "display": "Nil Known"
+                }
+              ]
+            }
+          },
+          {
+            "title": "Medication summary",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "10160-0",
+                  "display": "History of Medication use Narrative"
+                }
+              ]
+            },
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">No current medication</div>"
+            },
+            "emptyReason": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/list-empty-reason",
+                  "code": "nilknown",
+                  "display": "Nil Known"
+                }
+              ]
+            }
+          },
+          {
+            "title": "History of procedures",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "47519-4",
+                  "display": "History of Procedures Document"
+                }
+              ]
+            },
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">No procedures recorded</div>"
+            },
+            "emptyReason": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/list-empty-reason",
+                  "code": "nilknown",
+                  "display": "Nil Known"
+                }
+              ]
+            }
+          },
+          {
+            "title": "Medical devices",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "46264-8",
+                  "display": "History of medical device use"
+                }
+              ]
+            },
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">No implants or devices</div>"
+            },
+            "emptyReason": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/list-empty-reason",
+                  "code": "nilknown",
+                  "display": "Nil Known"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:5b0c1e2d-7f3a-4b8c-9d1e-2f3a4b5c6d02",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "5b0c1e2d-7f3a-4b8c-9d1e-2f3a4b5c6d02",
+        "meta": {
+          "profile": [
+            "http://hl7.eu/fhir/eps/StructureDefinition/patient-eu-eps"
+          ],
+          "security": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+              "code": "HTEST",
+              "display": "test health data"
+            }
+          ]
+        },
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Anna Example, female, born 1970</div>"
+        },
+        "name": [
+          {
+            "family": "Example",
+            "given": [
+              "Anna"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1970"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:3a2b1c0d-9e8f-4a7b-8c6d-5e4f3a2b1c03",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "3a2b1c0d-9e8f-4a7b-8c6d-5e4f3a2b1c03",
+        "meta": {
+          "profile": [
+            "http://hl7.eu/fhir/base/StructureDefinition/condition-eu-core"
+          ]
+        },
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Asthma, active since 2010</div>"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed"
+            }
+          ]
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/condition-category",
+                "code": "problem-list-item",
+                "display": "Problem List Item"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "195967001",
+              "display": "Asthma"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:5b0c1e2d-7f3a-4b8c-9d1e-2f3a4b5c6d02"
+        },
+        "onsetDateTime": "2010"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:9e8d7c6b-5a4f-4e3d-8c2b-1a0f9e8d7c04",
+      "resource": {
+        "resourceType": "Device",
+        "id": "9e8d7c6b-5a4f-4e3d-8c2b-1a0f9e8d7c04",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Example patient summary generator</div>"
+        },
+        "deviceName": [
+          {
+            "name": "Example patient summary generator",
+            "type": "user-friendly-name"
+          }
+        ]
+      }
+    }
+  ]
+}

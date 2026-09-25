@@ -1,0 +1,75 @@
+# Central configuration for structural checks, FHIR validation and reporting.
+# Everything the tooling needs lives here; the workflows contain no logic.
+schemaVersion: 1
+
+validator:
+  # Bump only through a validator-update pull request.
+  version: "6.10.4"
+  downloadUrl: "https://github.com/hapifhir/org.hl7.fhir.core/releases/download/{version}/validator_cli.jar"
+  # Optional integrity check of the downloaded jar; verified when set.
+  sha256: null
+  javaArgs: ["-Xmx4g", "-Dfile.encoding=UTF-8"]
+  # Wall-clock budget per validator invocation (one group of files).
+  timeoutMinutes: 25
+
+terminology:
+  server: "https://tx.fhir.org"
+  cacheDir: ".cache/txcache"
+  # tx.fhir.org times out now and then. A group whose validator run fails
+  # because the server is unreachable is retried this many times ...
+  retries: 2
+  # ... and then validated once more with "-tx n/a". Such a run is marked
+  # in results.json, the PR comment and the site: no LOINC, SNOMED CT or
+  # UCUM checks took place, so it reports fewer findings than usual.
+  fallbackToOffline: true
+
+defaultFhirVersion: "4.0.1"
+
+# Implementation guides loaded for every submission of the given FHIR version.
+# Keep this list small; submissions add their own via metadata.igs.
+# EPS pulls in its dependencies (IPS 2.0.0, EU Base 2.0.0, the EU extensions,
+# IHE MPD, ...) itself. Do not add another IPS version next to it: two versions
+# of the same canonicals make the result depend on which one the validator
+# picks. After changing the EPS version, regenerate tools/data/eps-model.json
+# with "python -m tools ig-model <package>#<version>".
+defaultIgs:
+  "4.0.1":
+    - hl7.fhir.eu.eps#1.0.0-ballot
+  "4.3.0": []
+  "5.0.0": []
+
+# Every document Bundle is additionally validated against this profile
+# (validator -profile), whether it declares it or not. A submission opts out
+# with "enforceProfile: false" in metadata.yaml. Remove the key to enforce
+# nothing.
+enforcedProfiles:
+  documentBundle: http://hl7.eu/fhir/eps/StructureDefinition/bundle-eu-eps
+
+# Passed to the validator verbatim, after -version/-ig/-profile/-tx/-output.
+# 6.10.4 prints "the option '-show-message-ids' is no longer in use, using
+# '-verbose'" and does exactly that; message ids still reach the output. Replace
+# it with "-verbose" when a future release stops accepting the old spelling.
+validatorFlags:
+  - "-show-message-ids"
+  - "-allow-example-urls"
+  - "true"
+  - "-extension"
+  - "any"
+  - "-display-issues-are-warnings"
+  - "-best-practice"
+  - "warning"
+
+structure:
+  allowedExtensions: [".json", ".xml"]
+  maxFileSizeBytes: 5242880
+  maxFilesPerSubmission: 50
+  slugPattern: "^[a-z0-9][a-z0-9-]{1,62}$"
+
+report:
+  prCommentBudgetChars: 60000
+  maxIssuesPerSubmissionInComment: 10
+  baselineUrl: "https://gefyra.github.io/fhir-eps-examples/results.json"
+  siteBaseUrl: "https://gefyra.github.io/fhir-eps-examples/"
+
+pii:
+  enabled: true
