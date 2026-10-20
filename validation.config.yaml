@@ -4,7 +4,7 @@ schemaVersion: 1
 
 validator:
   # Bump only through a validator-update pull request.
-  version: "6.10.4"
+  version: "7.0.2"
   downloadUrl: "https://github.com/hapifhir/org.hl7.fhir.core/releases/download/{version}/validator_cli.jar"
   # Optional integrity check of the downloaded jar; verified when set.
   sha256: null
